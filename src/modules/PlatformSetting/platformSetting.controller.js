@@ -8,7 +8,7 @@ const {
   getFeeHistoryService
 } = require('./platformSetting.service');
 
-// Get Fee & Commission Settings (Figma 40012563:24404)
+// Get Fee & Commission Settings
 const getFeeSettingsController = catchAsync(async (req, res) => {
   const result = await getFeeSettingsService();
   return res.status(status.OK).json(
@@ -22,7 +22,7 @@ const getFeeSettingsController = catchAsync(async (req, res) => {
   );
 });
 
-// Update Platform Fee (Figma 40012563:24404)
+// Update Platform Fee
 const updatePlatformFeeController = catchAsync(async (req, res) => {
   const result = await updatePlatformFeeService(req.body, req.user || {});
   return res.status(status.OK).json(
@@ -36,7 +36,7 @@ const updatePlatformFeeController = catchAsync(async (req, res) => {
   );
 });
 
-// Update Instructor Commission (Figma 40012563:24404)
+// Update Instructor Commission
 const updateInstructorCommissionController = catchAsync(async (req, res) => {
   const result = await updateInstructorCommissionService(req.body, req.user || {});
   return res.status(status.OK).json(
@@ -50,7 +50,7 @@ const updateInstructorCommissionController = catchAsync(async (req, res) => {
   );
 });
 
-// Get Fee or Commission Audit History (Figma 40012563:24707 & 40012563:25010)
+// Get Fee or Commission Audit History
 const getFeeHistoryController = catchAsync(async (req, res) => {
   const rawType = req.params.type || req.query.type;
   let normalizedType;

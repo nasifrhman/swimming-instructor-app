@@ -18,7 +18,7 @@ const {
   getMyReports
 } = require('./report.controller');
 
-// 1. Admin Disputes Endpoints (Figma 40012554:20231 & 40012554:20832)
+// 1. Admin Disputes Endpoints
 router.get('/admin/disputes', auth(['admin'], { optional: true }), getAdminDisputesList);
 router.get('/admin/disputes/:id', auth(['admin'], { optional: true }), getAdminDisputeDetails);
 router.patch('/admin/disputes/:id/resolve', auth(['admin'], { optional: true }), resolveDispute);
@@ -29,7 +29,7 @@ router.patch('/admin/:id/dismiss', auth(['admin'], { optional: true }), resolveD
 router.patch('/admin/:id', auth(['admin'], { optional: true }), resolveDispute);
 router.get('/admin', auth(['admin'], { optional: true }), getAdminDisputesList);
  
-// 2. Incident / Issue Report Creation (Figma 40012392:3369)
+// 2. Incident / Issue Report Creation
 router.post(
   '/create',
   auth(['user', 'instructor', 'admin'], { optional: true }),

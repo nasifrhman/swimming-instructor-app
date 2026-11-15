@@ -24,7 +24,7 @@ const parseDate = (dateInput) => {
 };
 
 /**
- * 1. Get Instructor Earnings Overview Data (Figma Node 40012419:6929)
+ * 1. Get Instructor Earnings Overview Data
  */
 const getInstructorEarningsOverviewService = async (instructorId, queryMonth = null, queryYear = null) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {
@@ -163,7 +163,7 @@ const getInstructorEarningsOverviewService = async (instructorId, queryMonth = n
 };
 
 /**
- * 2. Get Instructor Transactions History Data (Figma Node 40012438:8506)
+ * 2. Get Instructor Transactions History Data
  */
 const getInstructorTransactionsHistoryService = async (instructorId, options = {}) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {
@@ -400,7 +400,7 @@ const getInitials = (name) => {
 };
 
 /**
- * 4. Admin - Get Pending Withdrawals (Figma Node 40012563:21572)
+ * 4. Admin - Get Pending Withdrawals
  */
 const getAdminPendingWithdrawalsService = async (queryParams = {}) => {
   const { search, sortBy = 'date', sortOrder = 'desc', page = 1, limit = 10 } = queryParams;
@@ -499,7 +499,7 @@ const getAdminPendingWithdrawalsService = async (queryParams = {}) => {
 };
 
 /**
- * 5. Admin - Get Withdrawal History (Figma Node 40012563:22328)
+ * 5. Admin - Get Withdrawal History
  */
 const getAdminWithdrawalHistoryService = async (queryParams = {}) => {
   const { search, status: filterStatus, sortBy = 'actionDate', sortOrder = 'desc', page = 1, limit = 10 } = queryParams;
@@ -605,7 +605,7 @@ const getAdminWithdrawalHistoryService = async (queryParams = {}) => {
 };
 
 /**
- * 6. Admin - Get Withdrawal Details by ID (Figma Nodes 40012563:22209 & 40012563:24404)
+ * Admin: Get withdrawal details by ID
  */
 const getAdminWithdrawalDetailsService = async (id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -739,7 +739,7 @@ const adminActionWithdrawalService = async (id, action, body = {}, adminId = nul
 };
 
 /**
- * 8. Admin - Get Platform Earnings Overview & Chart (Figma Node 40012563:22986)
+ * 8. Admin - Get Platform Earnings Overview & Chart
  */
 const getAdminPlatformEarningsOverviewService = async (queryYear = null) => {
   const now = new Date();
@@ -864,7 +864,7 @@ const getAdminPlatformEarningsOverviewService = async (queryYear = null) => {
 };
 
 /**
- * 9. Admin - Get Platform Transaction Breakdown Table (Figma Node 40012563:22986)
+ * 9. Admin - Get Platform Transaction Breakdown Table
  */
 const getAdminPlatformTransactionsService = async (queryParams = {}) => {
   const { search, sortBy = 'date', sortOrder = 'desc', page = 1, limit = 10 } = queryParams;
@@ -951,7 +951,7 @@ const getAdminPlatformTransactionsService = async (queryParams = {}) => {
 };
 
 /**
- * 10. Get Saved Bank Account Details (Figma Node 40012508:6741)
+ * 10. Get Saved Bank Account Details
  */
 const getBankAccountService = async (userId) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -985,7 +985,7 @@ const getBankAccountService = async (userId) => {
 };
 
 /**
- * 11. Save or Update Bank Account Details (Figma Node 40012508:6741)
+ * 11. Save or Update Bank Account Details
  */
 const saveBankAccountService = async (userId, data = {}) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -1060,7 +1060,7 @@ const saveBankAccountService = async (userId, data = {}) => {
   };
 };
 /**
- * 12. Delete / Remove Bank Account (Figma Node 40012508:6741)
+ * 12. Delete / Remove Bank Account
  */
 const deleteBankAccountService = async (userId) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {

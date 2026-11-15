@@ -9,7 +9,7 @@ const {
   getMyReportsService
 } = require('./report.service');
 
-// 1. File a report / dispute on a lesson (Figma 40012392:3369)
+// 1. File a report / dispute on a lesson
 const createReport = catchAsync(async (req, res) => {
   let bodyData = req.body || {};
   if (bodyData && bodyData.data) {
@@ -41,7 +41,7 @@ const createReport = catchAsync(async (req, res) => {
   );
 });
 
-// 2. Admin: Get Disputes List with tab counts (Figma 40012554:20231)
+// 2. Admin: Get Disputes List with tab counts
 const getAdminDisputesList = catchAsync(async (req, res) => {
   const result = await getAdminDisputesListService(req.query);
 
@@ -56,7 +56,7 @@ const getAdminDisputesList = catchAsync(async (req, res) => {
   );
 });
 
-// 3. Admin: Get Dispute Details for Drawer (Figma 40012554:20832)
+// Admin: Get dispute details by ID
 const getAdminDisputeDetails = catchAsync(async (req, res) => {
   const disputeId = req.params.id;
   const result = await getAdminDisputeDetailsService(disputeId);

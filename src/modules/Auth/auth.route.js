@@ -42,7 +42,7 @@ router.post("/forget-password", forgetPassword);
 router.post("/reset-password", resetTokenCheck, resetPassword);
 router.patch("/change-password", auth(['user', 'instructor', 'admin']), changePassword);
 
-// 4. Profile Setup & Management (Step 4 & Figma Edit Profile 40012257:5335)
+// Profile setup and management
 router.get('/my-profile', auth(['user', 'instructor', 'admin']), userDetailsByID);
 router.get('/profile', auth(['user', 'instructor', 'admin']), userDetailsByID);
 

@@ -17,19 +17,18 @@ const router = express.Router();
 // while dev browser presentation can fall back to resolved preview user.
 const authGuard = auth(['user', 'instructor', 'admin'], { optional: true });
 
-// 1. Get user notifications (Figma Node 40012289:5166)
+// 1. Get user notifications
 router.get('/', authGuard, getMyNotificationsController);
 router.get('/my', authGuard, getMyNotificationsController);
 
 // 2. Get unread badge count
 router.get('/unread-count', authGuard, getUnreadNotificationCountController);
 
-// 3. Mark all as read (Figma "Mark as all read" button)
+// Mark all notifications as read
 router.patch('/mark-all-read', authGuard, markAllNotificationsAsReadController);
 router.patch('/read-all', authGuard, markAllNotificationsAsReadController);
 
-// 4. Seed demo sample notifications matching Figma 40012289:5166
-router.post('/seed-demo', authGuard, seedDemoNotificationsController);
+// 4. Seed demo sample notifications matchingrouter.post('/seed-demo', authGuard, seedDemoNotificationsController);
 
 // 5. Create / send notification
 router.post('/', authGuard, createNotificationController);

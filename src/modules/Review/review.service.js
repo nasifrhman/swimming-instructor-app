@@ -177,7 +177,7 @@ const createReviewService = async (reviewerId, payload) => {
 };
 
 /**
- * Get instructor reviews with rating breakdown and filter/sort options (matching Figma Reviews tab)
+ * Get instructor reviews with rating breakdown and filter/sort options (
  */
 const getInstructorReviewsService = async (instructorId, queryParams = {}) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {

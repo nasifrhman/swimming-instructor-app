@@ -50,7 +50,7 @@ const { authOrOnboarding, auth: authUser } = require('../../middlewares/auth');
 
 ensureUploadFolderExists(UPLOADS_FOLDER_USERS);
 
-// Bank Account (Figma Node 40012508:6741)
+// Bank Account
 router.get('/bank-account', authUser(['user', 'instructor', 'admin']), getBankAccount);
 router.post('/bank-account', authUser(['user', 'instructor', 'admin']), saveBankAccount);
 router.put('/bank-account', authUser(['user', 'instructor', 'admin']), saveBankAccount);
@@ -84,11 +84,11 @@ router.post(
   updateProfile
 );
 
-// User Home / Dashboard (Top Rated Instructors Near You - Figma 40010003:11)
+// User Home / Dashboard (Top Rated Instructors Near You)
 router.get("/home", tokenCheck, getUserHomeController);
 router.get("/top-instructors", tokenCheck, getUserHomeController);
 
-// Instructor Home / Dashboard (Figma 40012288:1871)
+// Instructor Home / Dashboard
 router.get("/instructor/home", tokenCheck, getInstructorHomeController);
 router.get("/home-instructor", tokenCheck, getInstructorHomeController);
 router.get("/instructor-home", tokenCheck, getInstructorHomeController);
@@ -96,11 +96,11 @@ router.get("/instructor-home", tokenCheck, getInstructorHomeController);
 router.patch("/location", auth(['user', 'instructor', 'admin']), updateUserLocationController);
 router.patch("/update-location", auth(['user', 'instructor', 'admin']), updateUserLocationController);
 
-// ==================== Admin Dashboard Overview (Figma Node 40012554:15436) ====================
+// Admin Dashboard Overview
 router.get("/admin/overview", tokenCheck, getAdminDashboardOverviewController);
 router.get("/admin/dashboard", tokenCheck, getAdminDashboardOverviewController);
 
-// ==================== Admin Clients Management & Drawers (Figma 40012554:16625, 40012525:10033, 40012525:10665) ====================
+// Admin Clients Management
 router.get("/admin/clients", tokenCheck, getAdminClientsListController);
 router.get("/admin/clients/:id", tokenCheck, getAdminClientDetailsController);
 router.get("/admin/clients/:id/reviews", tokenCheck, getAdminClientReviewsController);
@@ -109,7 +109,7 @@ router.patch("/admin/clients/:id/suspend", tokenCheck, suspendUserController);
 router.patch("/admin/clients/:id/ban", tokenCheck, banUserController);
 router.patch("/admin/clients/:id/active", tokenCheck, activeUserController);
 
-// ==================== Admin Instructors Management & Drawers (Figma 40012554:17155, 40012525:13366, 40012525:14227) ====================
+// Admin Instructors Management
 router.get("/admin/instructors", tokenCheck, getAdminInstructorsListController);
 router.get("/admin/instructors/:id", tokenCheck, getAdminInstructorDetailsController);
 router.get("/admin/instructors/:id/reviews", tokenCheck, getAdminInstructorReviewsController);
@@ -118,7 +118,7 @@ router.patch("/admin/instructors/:id/suspend", tokenCheck, suspendUserController
 router.patch("/admin/instructors/:id/ban", tokenCheck, banUserController);
 router.patch("/admin/instructors/:id/active", tokenCheck, activeUserController);
 
-// ==================== Admin Verification Queue & Review Drawer (Figma Node 40012554:19239 & 40012554:20000) ====================
+// Admin Verification Queue
 router.get("/admin/verifications", tokenCheck, getAdminVerificationsListController);
 router.get("/admin/verification-queue", tokenCheck, getAdminVerificationsListController);
 router.get("/admin/verifications/:id", tokenCheck, getAdminVerificationDetailsController);

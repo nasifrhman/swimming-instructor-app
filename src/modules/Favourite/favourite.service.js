@@ -69,7 +69,7 @@ function getNextAvailableSlot(availability, fallbackIndex = 0) {
     }
   }
 
-  // Fallback pattern matching Figma design
+  // Fallback pattern 
   const now = new Date();
   const targetDate = new Date(now);
   targetDate.setDate(now.getDate() + (fallbackIndex === 2 ? 2 : (fallbackIndex === 1 ? 1 : 0)));
@@ -165,8 +165,8 @@ const favouriteUnfavouriteService = async (userId, data = {}) => {
 };
 
 /**
- * Get My Favourites List (Figma Favorites Screen - Node 40012257:5410)
- * Returns strictly the fields matching the Figma design:
+ * Get user favorites list
+ * Returns formatted favorite instructors list:
  * - fullName, image, rating, reviewCount, distance, nextAvailableSlot, startingFrom, isFavourite
  */
 const myFavouriteService = async (userId, queryParams = {}) => {
@@ -274,7 +274,7 @@ const myFavouriteService = async (userId, queryParams = {}) => {
   const availMap = new Map();
   availabilities.forEach((a) => availMap.set(a.instructor.toString(), a));
 
-  // 6. Enrich Favorited Instructors to match Figma Cards
+  // Format favorited instructor cards
   const enrichedFavourites = instructors.map((inst, index) => {
     const s = serviceMap.get(inst._id.toString());
     const a = availMap.get(inst._id.toString());
@@ -306,7 +306,7 @@ const myFavouriteService = async (userId, queryParams = {}) => {
       calculatedDistance = defaultDistances[index % defaultDistances.length];
     }
 
-    // Next Available Slot badge (Figma: "July 15 · 3 slots left")
+    // Next Available Slot badge 
     const nextSlot = getNextAvailableSlot(a, index);
 
     // Pricing & Rating

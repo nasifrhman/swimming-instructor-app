@@ -30,14 +30,14 @@ const {
   checkBookingConflictController
 } = require('./booking.controller');
 
-// 1. Admin Bookings Endpoints (Figma 40012554:17793 & 40012554:18447)
+// 1. Admin Bookings Endpoints
 router.get('/admin/bookings', auth(['admin']), getAdminBookingsListController);
 router.post('/admin/bookings', auth(['admin']), createBooking);
 router.get('/admin/bookings/:id', auth(['admin']), getAdminBookingDetailsController);
 router.patch('/admin/bookings/:id/status', auth(['admin']), adminUpdateBookingStatusController);
 router.get('/admin/:id', auth(['admin']), getAdminBookingDetailsController);
 
-// Admin Refunds (Figma 40012554:21158)
+// Admin Refunds
 const refundRoutes = require('./refund.route');
 router.use('/admin/refunds', refundRoutes);
 
@@ -111,7 +111,7 @@ router.patch('/:id/cancel', auth(['user', 'instructor', 'admin']), cancelBooking
 router.patch('/status/:id', auth(['user', 'instructor', 'admin']), updateBookingStatus);
 router.patch('/:id/status', auth(['user', 'instructor', 'admin']), updateBookingStatus);
 
-// 8. Review & Pay and Booking Confirmed Screen Details (Figma 40012199:3518 & 40012199:3699)
+// 8. Review & Pay and Booking Confirmed Screen Details
 router.get('/review/:id', auth(['user', 'instructor', 'admin'], { optional: true }), getBookingReviewDetails);
 router.get('/:id/review', auth(['user', 'instructor', 'admin'], { optional: true }), getBookingReviewDetails);
 router.get('/confirmed/:id', auth(['user', 'instructor', 'admin'], { optional: true }), getBookingConfirmationDetails);
@@ -122,7 +122,7 @@ router.get('/:id/confirmation', auth(['user', 'instructor', 'admin'], { optional
 router.get('/:id/chat', auth(['user', 'instructor', 'admin']), getBookingChat);
 router.post('/:id/chat', auth(['user', 'instructor', 'admin']), getBookingChat);
 
-// 10. Booking Details by ID (Figma 40012321:3120)
+// 10. Booking Details by ID
 router.get('/request/:id', auth(['user', 'instructor', 'admin'], { optional: true }), getBookingDetails);
 router.get('/:id', auth(['user', 'instructor', 'admin'], { optional: true }), getBookingDetails);
 

@@ -37,7 +37,7 @@ const swimmerSchema = new mongoose.Schema(
   { _id: false }
 );
 
-// Waiver sub-schema (Step 4: "Waiver Form")
+// Waiver sub-schema ("Waiver Form")
 const waiverAgreementSchema = new mongoose.Schema(
   {
     isSigned: {
@@ -113,7 +113,7 @@ const bookingLocationSchema = new mongoose.Schema(
   { _id: false }
 );
 
-// Pricing Breakdown sub-schema (Step 5: "Review & Pay")
+// Pricing Breakdown sub-schema ("Review & Pay")
 const priceBreakdownSchema = new mongoose.Schema(
   {
     lessonPrice: {
@@ -254,7 +254,7 @@ const bookingSchema = new mongoose.Schema(
       default: 60
     },
 
-    // 4. Date & Time (Step 3)
+    // Date & Time
     date: {
       type: Date,
       required: true,
@@ -275,13 +275,13 @@ const bookingSchema = new mongoose.Schema(
       required: true
     },
 
-    // 6. Liability Waiver (Step 4)
+    // Liability Waiver
     waiver: {
       type: waiverAgreementSchema,
       required: true
     },
 
-    // 7. Pricing & Payment Breakdown (Step 5)
+    // Pricing & Payment Breakdown
     pricing: {
       type: priceBreakdownSchema,
       required: true

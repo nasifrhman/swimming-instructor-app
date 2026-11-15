@@ -24,7 +24,7 @@ const {
 // All chat routes require user, instructor, or admin auth
 router.use(auth(['user', 'instructor', 'admin']));
 
-// 1. Conversations / Inbox (Screen 1 in Figma: 40012257:2626)
+// Conversations and inbox
 router.get('/conversations', getMyConversations);
 router.get('/my-chats', getMyConversations);
 router.get('/unread-count', getTotalUnreadCount);
@@ -33,7 +33,7 @@ router.get('/unread-count', getTotalUnreadCount);
 router.post('/create-or-get', createOrGetChat);
 router.post('/initiate', createOrGetChat);
 
-// 3. Messages History & Sending (Screen 2 in Figma: 40012262:7458)
+// Message history and sending
 router.get('/:chatId/messages', getChatMessages);
 router.post(
   '/upload-attachment',

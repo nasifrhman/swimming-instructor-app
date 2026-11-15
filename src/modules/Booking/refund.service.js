@@ -23,7 +23,7 @@ const getInitials = (name) => {
 };
 
 /**
- * 1. Admin - Get Refunds Ledger (Figma Node 40012554:21158)
+ * 1. Admin - Get Refunds Ledger
  */
 const getAdminRefundsLedgerService = async (queryParams = {}) => {
   const { source, search, sortBy = 'date', sortOrder = 'desc', page = 1, limit = 10 } = queryParams;
@@ -176,7 +176,7 @@ const getAdminRefundDetailsService = async (id) => {
 };
 
 /**
- * 3. Admin - Issue Manual Refund (Figma Node 40012554:21158)
+ * 3. Admin - Issue Manual Refund
  */
 const issueAdminManualRefundService = async (body = {}, adminId = null) => {
   const { bookingId, amount, reason } = body;

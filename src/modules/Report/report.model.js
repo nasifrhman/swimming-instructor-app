@@ -43,7 +43,7 @@ const reportSchema = new mongoose.Schema(
       index: true
     },
 
-    // 4. Dispute / Issue details (Figma 40012392:3369 & 40012554:20832)
+    // 4. Dispute / Issue details
     reason: {
       type: String,
       required: [true, 'Dispute reason is required'],

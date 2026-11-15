@@ -10,7 +10,7 @@ const logger = require('../utils/logger');
  */
 const initCronJobs = () => {
   try {
-    // Delay initial startup sync slightly to allow replica set primary election & TLS handshake to stabilize
+    // Allow connection to stabilize before running initial sync
     setTimeout(async () => {
       if (mongoose.connection.readyState === 1) {
         try {

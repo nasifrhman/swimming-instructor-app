@@ -527,7 +527,7 @@ const updateInstructorDocumentsService = async (userId, data, files = {}) => {
 };
 
 /**
- * Create Client / User in MongoDB upon profile setup (Step 4 of User Onboarding)
+ * Create Client / User in MongoDB upon profile setup ()
  */
 const createUserOnProfileSetupService = async (reqUser, data, file) => {
   const email = (reqUser?.email || data?.email || '').toLowerCase().trim();
@@ -576,7 +576,7 @@ const createUserOnProfileSetupService = async (reqUser, data, file) => {
 };
 
 /**
- * Create Instructor in MongoDB upon document submission (Step 5 of Instructor Onboarding)
+ * Create Instructor in MongoDB upon document submission ()
  */
 const createInstructorOnDocumentSubmissionService = async (reqUser, data = {}, files = {}) => {
   const email = (reqUser?.email || data?.email || '').toLowerCase().trim();

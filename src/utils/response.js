@@ -1,7 +1,5 @@
 /**
- * Standard API Response Formatter
- * Preserves strict backward compatibility with frontend clients.
- *
+ * Standard API response formatter
  * @param {Object} response
  * @param {string|boolean} [response.status]
  * @param {number} [response.statusCode]

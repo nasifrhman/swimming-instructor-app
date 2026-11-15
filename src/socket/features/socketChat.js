@@ -115,7 +115,7 @@ const chatSocketHandler = (io, socket, connectedUsers) => {
   // Real-Time Send Message (only 'message' event)
   socket.on('message', handleSendMessage);
 
-  // 4. Real-Time Typing Indicator (Figma Screen 2)
+  // 4. Real-Time Typing Indicator
   const handleTyping = async (data) => {
     try {
       const { chatId, isTyping = true } = typeof data === 'string' ? JSON.parse(data) : data;

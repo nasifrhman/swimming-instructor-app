@@ -53,7 +53,7 @@ function errorHandler(err, req, res, next) {
     stack: err.stack,
   });
 
-  // Cleanup files on disk if an error occurred during request processing
+  // Clean up uploaded files on error
   if (req.file && req.file.path) {
     unlinkFile(req.file.path);
   }

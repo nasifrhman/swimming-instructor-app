@@ -121,7 +121,7 @@ const toggleDayService = async (instructorId, day, isAvailable) => {
 };
 
 /**
- * Get instructor date-specific slots, 7-day availability strip, and full month calendar (matching Figma Screens 40012130:6834 & 40012146:718)
+ * Get instructor date-specific slots, 7-day availability strip, and full month calendar
  */
 const getInstructorSlotsService = async (instructorId, queryDate, queryMonth) => {
   const Booking = require('../Booking/booking.model');
@@ -167,7 +167,7 @@ const getInstructorSlotsService = async (instructorId, queryDate, queryMonth) =>
     };
   });
 
-  // 3. Build 7-day calendar strip with accurate booked slot subtraction (Figma Screen 40012130:6834)
+  // 3. Build 7-day calendar strip with accurate booked slot subtraction
   const stripStart = new Date(targetDate);
   stripStart.setHours(0, 0, 0, 0);
   const stripEnd = new Date(targetDate);
@@ -238,7 +238,7 @@ const getInstructorSlotsService = async (instructorId, queryDate, queryMonth) =>
     });
   }
 
-  // 4. Monthly Calendar Grid (Figma Screen 40012146:718)
+  // 4. Monthly Calendar Grid
   let calendarMonth = null;
   const targetMonthStr = queryMonth || (queryDate ? queryDate.substring(0, 7) : null);
   if (targetMonthStr && targetMonthStr.match(/^\d{4}-\d{2}$/)) {

@@ -8,7 +8,7 @@ const {
   getFeeHistoryController
 } = require('./platformSetting.controller');
 
-// ==================== Admin Fees & Commission (Figma Node 40012563:24404 & 40012563:25010) ====================
+// 
 // 1. Get current fees and commission percentages
 router.get('/', tokenCheck, getFeeSettingsController);
 router.get('/fees', tokenCheck, getFeeSettingsController);

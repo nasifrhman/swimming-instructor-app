@@ -379,8 +379,7 @@ const checkBookingConflict = async ({
 };
 
 /**
- * Format "Review & Pay" Screen Payload (Strictly matching Figma 40012199:3518)
- * Strips all unnecessary database metadata, returning exact visual fields.
+ * Format review and pay payload
  */
 const formatReviewAndPayResponse = (booking, checkoutSession = null) => {
   const b = booking.toObject ? booking.toObject() : booking;
@@ -472,8 +471,7 @@ const formatReviewAndPayResponse = (booking, checkoutSession = null) => {
 };
 
 /**
- * Format "Booking Confirmed" Screen Payload (Strictly matching Figma 40012199:3699)
- * Strips all unnecessary backend/database fields.
+ * Format booking confirmed payload
  */
 const formatBookingConfirmedResponse = (booking, session = null) => {
   const b = booking.toObject ? booking.toObject() : booking;
@@ -544,7 +542,7 @@ const formatBookingConfirmedResponse = (booking, session = null) => {
 };
 
 /**
- * Format User Booking Card (Strictly only the fields shown on User Figma screens)
+ * Format User Booking Card 
  * No unnecessary internal fields or nulls.
  */
 const formatUserBookingCard = (booking) => {
@@ -602,7 +600,7 @@ const formatUserBookingCard = (booking) => {
     }
   }
 
-  // Determine user card state strictly matching Figma tabs
+  // Determine user card state by tab filter
   let cardState = 'upcoming';
   if (['cancelled', 'declined'].includes(b.status)) {
     cardState = 'cancelled';
@@ -624,7 +622,7 @@ const formatUserBookingCard = (booking) => {
     image: instructorImage
   };
 
-  // 1. Upcoming Card (Figma 40012200-4073)
+  // 1. Upcoming Card
   if (cardState === 'upcoming') {
     return {
       _id: b._id,
@@ -640,7 +638,7 @@ const formatUserBookingCard = (booking) => {
     };
   }
 
-  // 2. Active Card (Figma 40012392-6688)
+  // 2. Active Card
   if (cardState === 'active') {
     return {
       _id: b._id,
@@ -656,7 +654,7 @@ const formatUserBookingCard = (booking) => {
     };
   }
 
-  // 3. To Confirm Card (Figma 40012521-7298)
+  // 3. To Confirm Card
   if (cardState === 'to_confirm') {
     return {
       _id: b._id,
@@ -672,7 +670,7 @@ const formatUserBookingCard = (booking) => {
     };
   }
 
-  // 4. Completed Card (Figma 40012228-3788)
+  // 4. Completed Card
   if (cardState === 'completed') {
     const completedCard = {
       _id: b._id,
@@ -695,7 +693,7 @@ const formatUserBookingCard = (booking) => {
     return completedCard;
   }
 
-  // 5. Requested Card (Figma 40012521-7633)
+  // 5. Requested Card
   if (cardState === 'requested') {
     const requestedCard = {
       _id: b._id,
@@ -717,7 +715,7 @@ const formatUserBookingCard = (booking) => {
     return requestedCard;
   }
 
-  // 6. Cancelled Card (Figma 40012257-2729 & 40012521-8097)
+  // 6. Cancelled Card
   const totalAmt = Number(b.pricing?.totalAmount || 0);
   const refundAmt = Number(b.refundAmount || totalAmt);
   let refundStatus = '$0.00 refunded';
@@ -758,7 +756,7 @@ const formatUserBookingCard = (booking) => {
 };
 
 /**
- * Format Instructor Booking Card (Strictly only the fields shown on Instructor Figma screens)
+ * Format Instructor Booking Card 
  * No unnecessary internal fields or nulls.
  */
 const formatInstructorBookingCard = (booking) => {
@@ -818,7 +816,7 @@ const formatInstructorBookingCard = (booking) => {
     }
   }
 
-  // Determine instructor card state strictly matching Figma tabs
+  // Determine instructor card state by tab filter
   let cardState = 'requests';
   if (['cancelled', 'declined'].includes(b.status)) {
     cardState = 'cancelled';
@@ -840,7 +838,7 @@ const formatInstructorBookingCard = (booking) => {
     image: clientImage
   };
 
-  // 1. Requests Card (Figma 40012335-5594)
+  // 1. Requests Card
   if (cardState === 'requests') {
     let expiresIn = 'Expires soon';
     if (b.expiresAt) {
@@ -869,7 +867,7 @@ const formatInstructorBookingCard = (booking) => {
     };
   }
 
-  // 2. Active Card (Figma 40012335-5965)
+  // 2. Active Card
   if (cardState === 'active') {
     return {
       _id: b._id,
@@ -886,7 +884,7 @@ const formatInstructorBookingCard = (booking) => {
     };
   }
 
-  // 3. Upcoming Card (Figma 40012335-6142)
+  // 3. Upcoming Card
   if (cardState === 'upcoming') {
     return {
       _id: b._id,
@@ -903,7 +901,7 @@ const formatInstructorBookingCard = (booking) => {
     };
   }
 
-  // 4. Pending Approval Card (Figma 40012335-6808)
+  // 4. Pending Approval Card
   if (cardState === 'pending_approval') {
     return {
       _id: b._id,
@@ -921,7 +919,7 @@ const formatInstructorBookingCard = (booking) => {
     };
   }
 
-  // 5. Completed Card (Figma 40012335-6303)
+  // 5. Completed Card
   if (cardState === 'completed') {
     const completedCard = {
       _id: b._id,
@@ -946,7 +944,7 @@ const formatInstructorBookingCard = (booking) => {
     return completedCard;
   }
 
-  // 6. Cancelled Card (Figma 40012335-6544)
+  // 6. Cancelled Card
   const cancelDateObj = b.cancelledAt ? new Date(b.cancelledAt) : (b.updatedAt ? new Date(b.updatedAt) : null);
   let cancelDateStr = '';
   if (cancelDateObj && !isNaN(cancelDateObj.getTime())) {
@@ -1065,7 +1063,7 @@ const createBookingService = async (authUserId, payload) => {
     }
   }
 
-  // 2. Swimmer Details & Auto-fill for 'myself' (Figma Screen 40012135:754)
+  // 2. Swimmer Details & Auto-fill for 'myself'
   const isMyself = (swimmer?.bookedFor === 'myself') || (!swimmer?.name && !swimmerName);
   let defaultAge = 0;
   if (clientUser?.dob) {
@@ -1090,7 +1088,7 @@ const createBookingService = async (authUserId, payload) => {
     travelDistance: Number(location?.travelDistance || 0)
   };
 
-  // 4. Liability Waiver (Figma Screen 40012195:700)
+  // 4. Liability Waiver
   const waiverObj = {
     isSigned: waiver?.isSigned !== undefined ? waiver.isSigned : true,
     signerRelationship: waiver?.signerRelationship || (isMyself ? 'self' : 'parent'),
@@ -1100,7 +1098,7 @@ const createBookingService = async (authUserId, payload) => {
     waiverVersion: waiver?.waiverVersion || 'v1.0'
   };
 
-  // Calculate pricing breakdown (Figma Screen 40012199:3518)
+  // Calculate pricing breakdown
   const lessonPrice = Number(pricing?.lessonPrice) || 60;
   const bookingFee = Number(pricing?.bookingFee) || +(lessonPrice * 0.05).toFixed(2);
   const poolEntryFee = Number(pricing?.poolEntryFee) || 0;
@@ -1256,7 +1254,7 @@ const createBookingService = async (authUserId, payload) => {
 };
 
 /**
- * Get Bookings by Tab & Role (Clean card responses matching Figma screens)
+ * Get Bookings by Tab & Role (Clean card responses 
  */
 const getMyBookingsService = async (userId, role, queryParams = {}) => {
   const {
@@ -1389,7 +1387,7 @@ const getMyBookingsService = async (userId, role, queryParams = {}) => {
 };
 
 /**
- * Get Tab Counts for switcher badges (matching User and Instructor Figma screens)
+ * Get tab counts for switcher badges
  */
 const getBookingTabCountsService = async (userId, role) => {
   const userQuery = role === 'instructor' ? { instructor: userId } : { client: userId };
@@ -1478,7 +1476,7 @@ const formatMemberDuration = (createdAt) => {
 const daysOfWeekShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const formatFigmaBookingDate = (date, startTime) => {
+const formatDisplayBookingDate = (date, startTime) => {
   if (!date) return startTime || '';
   const d = new Date(date);
   if (isNaN(d.getTime())) return startTime || '';
@@ -1544,7 +1542,7 @@ const formatCancellationCutoff = (date, startTime) => {
 };
 
 /**
- * Get Booking Details by ID (Clean database data, custom response based on role matching Figma User View 40012606:5436 / 40012239:1080 and Instructor View 40012368:2829)
+ * Get Booking Details by ID (Clean database data, custom response based on role 
  */
 const getBookingByIdService = async (bookingId, userId, requestedRole, queryParams = {}) => {
   let booking = null;
@@ -1654,7 +1652,7 @@ const getBookingByIdService = async (bookingId, userId, requestedRole, queryPara
     }
   }
 
-  // Client stats for Instructor View (Booked by card in Figma 40012368:2829)
+  // Client stats for Instructor View (Booked by card in)
   const clientStats = {
     lessonsBooked: 0,
     cancels: 0,
@@ -1756,7 +1754,7 @@ const getBookingByIdService = async (bookingId, userId, requestedRole, queryPara
   const isPaidOut = b.status === 'completed';
   const payoutDate = b.payment?.paidAt || b.completedAt || b.updatedAt;
 
-  // 1. Instructor-specific View Payload (Figma 40012368:2829)
+  // 1. Instructor-specific View Payload
   const instructorViewData = {
     roleView: 'instructor',
     _id: b._id,
@@ -1764,7 +1762,7 @@ const getBookingByIdService = async (bookingId, userId, requestedRole, queryPara
     status: b.status,
     statusDisplay: getStatusDisplay(b.status),
     date: b.date,
-    dateFormatted: formatFigmaBookingDate(b.date, b.startTime),
+    dateFormatted: formatDisplayBookingDate(b.date, b.startTime),
     relativeTime: formatRelativeDays(b.date),
     startTime: b.startTime || null,
     endTime: b.endTime || null,
@@ -1774,7 +1772,7 @@ const getBookingByIdService = async (bookingId, userId, requestedRole, queryPara
       title: 'Lesson details',
       status: b.status,
       statusDisplay: getStatusDisplay(b.status),
-      dateFormatted: formatFigmaBookingDate(b.date, b.startTime),
+      dateFormatted: formatDisplayBookingDate(b.date, b.startTime),
       subtitle: `${b.duration || 60} min · ${poolName || 'Oak Lawn Community Pool'}`,
       payout: {
         status: isPaidOut ? 'Paid out' : 'Pending payout',
@@ -1872,7 +1870,7 @@ const getBookingByIdService = async (bookingId, userId, requestedRole, queryPara
     updatedAt: b.updatedAt
   };
 
-  // 2. User-specific View Payload (Figma 40012239:1080 & 40012606:5436)
+  // 2. User-specific View Payload
   const userViewData = {
     roleView: 'user',
     _id: b._id,
@@ -1880,7 +1878,7 @@ const getBookingByIdService = async (bookingId, userId, requestedRole, queryPara
     status: b.status,
     statusDisplay: getStatusDisplay(b.status),
     date: b.date,
-    dateFormatted: formatFigmaBookingDate(b.date, b.startTime),
+    dateFormatted: formatDisplayBookingDate(b.date, b.startTime),
     relativeTime: formatRelativeDays(b.date),
     startTime: b.startTime || null,
     endTime: b.endTime || null,
@@ -1891,7 +1889,7 @@ const getBookingByIdService = async (bookingId, userId, requestedRole, queryPara
       title: 'Booking details',
       status: b.status,
       statusDisplay: getStatusDisplay(b.status),
-      dateFormatted: formatFigmaBookingDate(b.date, b.startTime),
+      dateFormatted: formatDisplayBookingDate(b.date, b.startTime),
       relativeCountdown: `${formatRelativeDays(b.date)} · ${b.duration || 60} min`,
       calendar: {
         title: `${b.lessonType || '60-min private lesson'} with ${instructorUser?.fullName || 'Instructor'}`,
@@ -2250,7 +2248,7 @@ const sendBookingReminderService = async (bookingId, instructorId) => {
 };
 
 /**
- * Instructor Accepts a Booking Request (Figma Node 40012335:5594)
+ * Instructor Accepts a Booking Request
  */
 const acceptBookingService = async (bookingId, instructorId, userRole = null) => {
   if (!mongoose.Types.ObjectId.isValid(bookingId)) {
@@ -2315,7 +2313,7 @@ const acceptBookingService = async (bookingId, instructorId, userRole = null) =>
     console.error('Error linking chat to accepted booking:', chatErr);
   }
 
-  // Trigger Booking Confirmed Notification for client and instructor (Figma 40012289:5166)
+  // Trigger Booking Confirmed Notification for client and instructor
   try {
     const { createNotificationService } = require('../Notification/notification.service');
     const lessonDateStr = booking.date ? new Date(booking.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : '';
@@ -2438,7 +2436,7 @@ const acceptBookingService = async (bookingId, instructorId, userRole = null) =>
 };
 
 /**
- * Instructor Declines a Booking Request (Figma Node 40012335:5594)
+ * Instructor Declines a Booking Request
  */
 const declineBookingService = async (bookingId, instructorId, reason = '') => {
   if (!mongoose.Types.ObjectId.isValid(bookingId)) {
@@ -2521,7 +2519,7 @@ const declineBookingService = async (bookingId, instructorId, reason = '') => {
     }
   }
 
-  // Trigger Booking Declined & Refund Notifications for client (Figma 40012289:5166)
+  // Trigger Booking Declined & Refund Notifications for client
   try {
     const { createNotificationService } = require('../Notification/notification.service');
     const lessonDateStr = booking.date ? new Date(booking.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : '';
@@ -2568,7 +2566,7 @@ const declineBookingService = async (bookingId, instructorId, reason = '') => {
 };
 
 /**
- * Mark Booking as Active / In-progress (Figma Node 40012335:5965)
+ * Mark Booking as Active / In-progress
  */
 const markBookingActiveService = async (bookingId, userId, userRole) => {
   if (!mongoose.Types.ObjectId.isValid(bookingId)) {
@@ -2612,7 +2610,7 @@ const markBookingActiveService = async (bookingId, userId, userRole) => {
 
 /**
  * Complete Booking - Two-sided confirmation: both client and instructor must mark as complete
- * (Figma Screen & Requirement: User & Instructor both mark it as complete)
+ * (Requirement: User & Instructor both mark it as complete)
  */
 const completeBookingService = async (bookingId, userId, userRole = null) => {
   if (!mongoose.Types.ObjectId.isValid(bookingId)) {
@@ -2683,7 +2681,7 @@ const completeBookingService = async (bookingId, userId, userRole = null) => {
 
   await booking.save();
 
-  // Trigger Lesson Review Notification for client (Figma 40012289:5166)
+  // Trigger Lesson Review Notification for client
   try {
     if (isInstructor || booking.status === 'completed') {
       const { createNotificationService } = require('../Notification/notification.service');
@@ -2826,7 +2824,7 @@ const cancelBookingService = async (bookingId, userId, userRole, reason = '') =>
 
   await booking.save();
 
-  // Create Refund ledger record whenever refundAmount > 0 (Figma Node 40012554:21158)
+  // Create Refund ledger record whenever refundAmount > 0
   if (refundAmount > 0) {
     try {
       await Refund.create({
@@ -2847,7 +2845,7 @@ const cancelBookingService = async (bookingId, userId, userRole, reason = '') =>
     }
   }
 
-  // Trigger Booking Cancelled & Refund Notifications (Figma 40012289:5166)
+  // Trigger Booking Cancelled & Refund Notifications
   try {
     const { createNotificationService } = require('../Notification/notification.service');
     const lessonDateStr = booking.date ? new Date(booking.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
@@ -2911,7 +2909,7 @@ const cancelBookingService = async (bookingId, userId, userRole, reason = '') =>
 };
 
 /**
- * Rebook past lesson (Figma Node 40012228:3788 "Book Again")
+ * Rebook past lesson ("Book Again")
  */
 const rebookLessonService = async (bookingId, userId) => {
   if (!mongoose.Types.ObjectId.isValid(bookingId)) {
@@ -3014,7 +3012,7 @@ const COMFORT_LEVEL_LABELS = {
 };
 
 /**
- * Admin Bookings List (Figma 40012554:17793)
+ * Admin Bookings List
  * Supports status tabs (All, Upcoming, Active, Completed, Cancelled), search, sorting, and pagination.
  */
 const getAdminBookingsListService = async (queryParams = {}) => {
@@ -3211,8 +3209,7 @@ const getAdminBookingsListService = async (queryParams = {}) => {
 };
 
 /**
- * Admin Booking Details Drawer (Figma 40012554:18447)
- * Returns swimmer info, comfort level badge, location, date, time, payment, price breakdown, and waiver.
+ * Admin booking details
  */
 const getAdminBookingDetailsService = async (bookingId) => {
   let filter = {};
@@ -3997,7 +3994,7 @@ const handlePaymentFailService = async (sessionId = null, bookingId = null, reas
 };
 
 /**
- * Get Review & Pay details for a booking (Figma Node 40012199:3518)
+ * Get Review & Pay details for a booking
  */
 const getBookingReviewDetailsService = async (bookingId, userId = null) => {
   if (!bookingId || !mongoose.Types.ObjectId.isValid(bookingId)) {
@@ -4016,7 +4013,7 @@ const getBookingReviewDetailsService = async (bookingId, userId = null) => {
 };
 
 /**
- * Get Booking Confirmed details for a booking (Figma Node 40012199:3699)
+ * Get Booking Confirmed details for a booking
  */
 const getBookingConfirmationDetailsService = async (bookingId, userId = null) => {
   if (!bookingId || !mongoose.Types.ObjectId.isValid(bookingId)) {

@@ -19,7 +19,7 @@ const webhookRoutes = require("./modules/Booking/webhook.route");
 // Initialize Express App
 const app = express();
 
-// Body Parsers with rawBody verification for Stripe webhooks
+// Body parser with raw body buffer for Stripe webhooks
 app.use(
   express.json({
     limit: "100mb",
@@ -101,7 +101,7 @@ app.get('/.well-known/assetlinks.json', (req, res) => {
 app.use(["/webhook", "/weebhook", "/helpers", "/stripe"], webhookRoutes);
 app.use("/api/v1", routes);
 
-// UI Pages (Instructor fallback)
+// Instructor UI pages
 app.get([
   "/instructor",
   "/instructor/*",

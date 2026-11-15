@@ -216,12 +216,12 @@ const updateUserLocationService = async (userId, payload = {}) => {
 };
 
 /**
- * Get User Home Feed (Top Rated Instructors Near You - Figma 40010003:11)
+ * Get User Home Feed (Top Rated Instructors Near You)
  * Returns user profile with current location/address, upcoming session card, and instructors sorted by top rated near user's location.
  */
 /**
- * Get User Home Feed (Top Rated Instructors Near You - Figma 40010003:11)
- * Returns strictly the fields visible in the Figma design:
+ * Get User Home Feed (Top Rated Instructors Near You)
+ * Returns formatted home feed response
  * 1. User Header: greeting, address, image
  * 2. Upcoming Session Card: _id, timeStatus, instructorName, instructorId, sessionDetails
  * 3. Top Rated Instructors Near You: _id, fullName, image, rating, reviewCount, distance, nextAvailableSlot, startingFrom
@@ -233,7 +233,7 @@ const getUserHomeFeedService = async (userId, queryParams = {}) => {
 
   const { search, lat, lng, address, sortBy = 'top_rated' } = queryParams;
 
-  // 1. Resolve User Greeting, Address & Avatar (Figma: "Morning, Sarah", "4827 Willow Creek Drive")
+  // 1. Resolve User Greeting, Address & Avatar 
   const hour = new Date().getHours();
   let timeGreeting = 'Morning';
   if (hour >= 12 && hour < 17) {
@@ -283,7 +283,7 @@ const getUserHomeFeedService = async (userId, queryParams = {}) => {
     }
   }
 
-  // 2. Fetch User's Upcoming Session (Figma Blue Card: "In 4 hours", "Naomi Johnson", "Today 4:30 pm · 30 min · Oak Lawn Aquatic Center")
+  // 2. Fetch user's upcoming session card
   let upcomingSession = null;
   if (userId) {
     const startOfToday = new Date();
@@ -372,7 +372,7 @@ const getUserHomeFeedService = async (userId, queryParams = {}) => {
   ];
   const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
-  // 6. Enrich each instructor strictly with the fields shown on the Figma card
+  // 6. Format instructor cards
   const enrichedInstructors = allInstructors.map((inst, index) => {
     const s = serviceMap.get(inst._id.toString());
     const a = availMap.get(inst._id.toString());
@@ -522,8 +522,8 @@ const getUserHomeFeedService = async (userId, queryParams = {}) => {
 };
 
 /**
- * Get Instructor Home Feed (Figma 40012288:1871)
- * Returns the exact layout & data structure from Figma:
+ * Get Instructor Home Feed
+ * Formats dashboard data
  * 1. Profile: greeting ("Morning, Evelyn"), location ("4827 Willow Creek Drive"), avatar, unreadNotificationCount: 2
  * 2. Overview:
  *    - upcomingCount: 5
@@ -558,7 +558,7 @@ const getUserHomeFeedService = async (userId, queryParams = {}) => {
  *    - canWithdraw: true
  */
 /**
- * Helpers for Instructor Home Feed formatting (Figma 40012288:1871)
+ * Helpers for Instructor Home Feed formatting
  */
 const formatBookingDateTime = (dateInput, startTime, endTime) => {
   let timePart = '';
@@ -796,7 +796,7 @@ const getInstructorHomeFeedService = async (instructorId, queryParams = {}) => {
     totalReviews = Number(reviewStats[0].totalReviews);
   }
 
-  // 4. Header Greeting & Location (Figma 40012288:2006 & 40012288:2011)
+  // 4. Header Greeting & Location
   const currentHour = now.getHours();
   let greetingPrefix = 'Morning';
   if (currentHour >= 12 && currentHour < 17) {
@@ -809,7 +809,7 @@ const getInstructorHomeFeedService = async (instructorId, queryParams = {}) => {
   const firstName = fullName ? fullName.split(' ')[0] : '';
   const greeting = firstName ? `${greetingPrefix}, ${firstName}` : greetingPrefix;
 
-  // 5. Unread Notifications Count (Figma 40012288:1999)
+  // 5. Unread Notifications Count
   let unreadNotificationCount = 0;
   try {
     const Notification = require('../Notification/notification.model');
@@ -821,7 +821,7 @@ const getInstructorHomeFeedService = async (instructorId, queryParams = {}) => {
     unreadNotificationCount = 0;
   }
 
-  // 6. Map New Requests (Figma 40012309:7207)
+  // 6. Map New Requests
   const newRequests = realRequests.map((r) => {
     const price = Number(r.pricing?.instructorEarnings ?? r.pricing?.totalAmount ?? 0);
     const lessonType = r.swimmer?.age
@@ -843,7 +843,7 @@ const getInstructorHomeFeedService = async (instructorId, queryParams = {}) => {
     };
   });
 
-  // 7. Sort Today's Lessons Chronologically and Map (Figma 40012309:7205)
+  // 7. Sort Today's Lessons Chronologically and Map
   realToday.sort((a, b) => {
     const parseTimeToMins = (t) => {
       if (!t) return 0;
@@ -1743,7 +1743,7 @@ const updateInstructorStatusService = async (instructorId, payload = {}) => {
 };
 
 /**
- * 9. Admin - Get Dashboard Overview (Figma Node 40012554:15436)
+ * 9. Admin - Get Dashboard Overview
  * Returns:
  * - 8 KPI metric cards with counts, percentage changes, trends and badges
  * - Bookings Overview 12-month bar chart
@@ -1986,7 +1986,7 @@ const getAdminDashboardOverviewService = async (queryParams = {}) => {
     monthly: earningsChartMonthly
   };
 
-  // 3. Pending Instructors List (Figma 40012554:15942)
+  // 3. Pending Instructors List
   const formatTimeAgo = (date) => {
     if (!date) return 'Recently';
     const diffMs = Date.now() - new Date(date).getTime();
@@ -2051,7 +2051,7 @@ const getAdminDashboardOverviewService = async (queryParams = {}) => {
   };
 };
 
-// Helpers for Admin Verification Services (Figma 40012554:19239 & 40012554:20000)
+// Helpers for Admin Verification Services
 const formatDocUrl = (url, fallbackName) => {
   if (url && typeof url === 'string') {
     return url.startsWith('http') || url.startsWith('/') ? url : `/uploads/users/${url}`;
@@ -2122,7 +2122,7 @@ const maskIdNumber = (num) => {
 };
 
 /**
- * 10. Admin Verification Queue List (Figma Node 40012554:19239)
+ * 10. Admin Verification Queue List
  * Supports tabs: pending, approved, rejected, all
  * Supports search, sorting, and pagination
  */
@@ -2281,8 +2281,7 @@ const getAdminVerificationQueueService = async (queryParams = {}) => {
 };
 
 /**
- * 11. Admin Verification Details Drawer (Figma Node 40012554:20000)
- * Returns strictly the information displayed in the verification review drawer.
+ * Get instructor verification details by ID
  */
 const getAdminVerificationDetailsService = async (instructorId) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {
@@ -2370,7 +2369,7 @@ const getAdminVerificationDetailsService = async (instructorId) => {
 };
 
 /**
- * 12. Admin Approve Verification (Figma Node 40012554:20000)
+ * 12. Admin Approve Verification
  */
 const adminApproveVerificationService = async (instructorId, payload = {}) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {
@@ -2401,7 +2400,7 @@ const adminApproveVerificationService = async (instructorId, payload = {}) => {
 };
 
 /**
- * 13. Admin Reject Verification (Figma Node 40012554:20000)
+ * 13. Admin Reject Verification
  */
 const adminRejectVerificationService = async (instructorId, payload = {}) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {

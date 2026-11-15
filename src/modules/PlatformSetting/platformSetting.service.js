@@ -9,9 +9,8 @@ const formatDate = (date) => {
 };
 
 /**
- * Ensure default settings exist with exact Figma baseline data
- * Matching Figma 40012563:24404 & 40012563:25010
- */
+ * Ensure default platform fee settings exist
+ * Matching*/
 const getOrCreateSettingsDoc = async () => {
   let doc = await PlatformSetting.findOne({ settingKey: 'global_fees' });
   if (!doc) {
@@ -52,7 +51,7 @@ const getOrCreateSettingsDoc = async () => {
       ]
     });
   } else {
-    // Filter out temporary test entries if any and reset baseline dates to match Figma
+    // Reset audit baseline if test percentages exist
     let changed = false;
     if (doc.history && doc.history.some((h) => h.previousPercentage === 5.5 || h.newPercentage === 5.5)) {
       doc.history = doc.history.filter((h) => h.previousPercentage !== 5.5 && h.newPercentage !== 5.5);
@@ -60,7 +59,7 @@ const getOrCreateSettingsDoc = async () => {
       doc.platformFee.lastChanged = new Date('2026-08-07T14:30:00.000Z');
       changed = true;
     }
-    // Ensure base Figma history items exist
+    // Ensure baseline history audit entries exist
     if (!doc.history || doc.history.length === 0) {
       doc.history = [
         {
@@ -96,8 +95,7 @@ const getOrCreateSettingsDoc = async () => {
 
 /**
  * 1. API 1: Get current fees & commission configuration
- * Strictly for Page 1: Figma 40012563:24404
- */
+ * Fee configuration settings*/
 const getFeeSettingsService = async () => {
   const doc = await getOrCreateSettingsDoc();
 
@@ -115,7 +113,7 @@ const getFeeSettingsService = async () => {
 
 /**
  * 2. Update Platform Fee
- * Matching Figma 40012563:24404 (Platform Fee "Save fee")
+ * Matching(Platform Fee "Save fee")
  */
 const updatePlatformFeeService = async (payload, adminUser = {}) => {
   const { percentage } = payload;
@@ -154,7 +152,7 @@ const updatePlatformFeeService = async (payload, adminUser = {}) => {
 
 /**
  * 3. Update Instructor Commission
- * Matching Figma 40012563:24404 (Instructor Commission "Save commission")
+ * Matching(Instructor Commission "Save commission")
  */
 const updateInstructorCommissionService = async (payload, adminUser = {}) => {
   const { percentage } = payload;
@@ -193,7 +191,7 @@ const updateInstructorCommissionService = async (payload, adminUser = {}) => {
 
 /**
  * 4. Get audit history for fees or commission
- * Matching Figma 40012563:25010 (HistoryModal)
+ * Matching(HistoryModal)
  */
 const getFeeHistoryService = async (type) => {
   const doc = await getOrCreateSettingsDoc();

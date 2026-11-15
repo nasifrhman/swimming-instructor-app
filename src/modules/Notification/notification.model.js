@@ -46,7 +46,7 @@ const notificationSchema = new mongoose.Schema(
     },
     iconBg: {
       type: String,
-      default: 'rgba(232, 148, 63, 0.2)' // Default warm amber from Figma
+      default: 'rgba(232, 148, 63, 0.2)'
     },
     isRead: {
       type: Boolean,

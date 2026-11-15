@@ -284,7 +284,7 @@ const deleteFcmTokenController = catchAsync(async (req, res) => {
   return res.status(status.OK).json(response({ statusCode: status.OK, message:'fcm-token-deleted', status: "OK" }));
 })
 
-// Instructors List (Top Rated Instructors Near You - Figma 40010003:11)
+// Instructors list
 const getUserHomeController = catchAsync(async (req, res) => {
   if (req.User?.role === 'instructor' || req.query.role === 'instructor') {
     const instructorId = req.User ? req.User._id : (req.query.instructorId || null);
@@ -313,7 +313,7 @@ const getUserHomeController = catchAsync(async (req, res) => {
   );
 });
 
-// Instructor Home / Dashboard (Figma 40012288:1871)
+// Instructor Home / Dashboard
 const getInstructorHomeController = catchAsync(async (req, res) => {
   const instructorId = req.query.instructorId || (req.User ? req.User._id : null);
   const result = await getInstructorHomeFeedService(instructorId, req.query);
@@ -328,7 +328,7 @@ const getInstructorHomeController = catchAsync(async (req, res) => {
   );
 });
 
-// Update User Location / Address (Figma 40010003:11 location dropdown)
+// Update user location
 const updateUserLocationController = catchAsync(async (req, res) => {
   const userId = req.User._id;
   const result = await updateUserLocationService(userId, req.body);
@@ -343,7 +343,7 @@ const updateUserLocationController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Clients List (Figma 40012554:16625)
+// Admin Clients List
 const getAdminClientsListController = catchAsync(async (req, res) => {
   const result = await getAdminClientsListService(req.query);
   return res.status(status.OK).json(
@@ -357,7 +357,7 @@ const getAdminClientsListController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Client Details Drawer (Figma 40012525:10033 - Details tab)
+// Admin Client Details
 const getAdminClientDetailsController = catchAsync(async (req, res) => {
   const result = await getAdminClientDetailsService(req.params.id);
   return res.status(status.OK).json(
@@ -371,7 +371,7 @@ const getAdminClientDetailsController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Client Reviews Drawer (Figma 40012525:10665 - Reviews tab)
+// Admin Client Reviews
 const getAdminClientReviewsController = catchAsync(async (req, res) => {
   const result = await getAdminClientReviewsService(req.params.id, req.query);
   return res.status(status.OK).json(
@@ -399,7 +399,7 @@ const updateClientStatusController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Instructors List (Figma 40012554:17155)
+// Admin Instructors List
 const getAdminInstructorsListController = catchAsync(async (req, res) => {
   const result = await getAdminInstructorsListService(req.query);
   return res.status(status.OK).json(
@@ -413,7 +413,7 @@ const getAdminInstructorsListController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Instructor Details Drawer (Figma 40012525:13366 - Details Tab)
+// Admin Instructor Details
 const getAdminInstructorDetailsController = catchAsync(async (req, res) => {
   const result = await getAdminInstructorDetailsService(req.params.id);
   return res.status(status.OK).json(
@@ -427,7 +427,7 @@ const getAdminInstructorDetailsController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Instructor Reviews Drawer (Figma 40012525:14227 - Reviews Tab)
+// Admin Instructor Reviews
 const getAdminInstructorReviewsController = catchAsync(async (req, res) => {
   const result = await getAdminInstructorReviewsService(req.params.id, req.query);
   return res.status(status.OK).json(
@@ -455,7 +455,7 @@ const updateInstructorStatusController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Dashboard Overview (Figma Node 40012554:15436)
+// Admin Dashboard Overview
 const getAdminDashboardOverviewController = catchAsync(async (req, res) => {
   const result = await getAdminDashboardOverviewService(req.query);
   return res.status(status.OK).json(
@@ -469,7 +469,7 @@ const getAdminDashboardOverviewController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Verification Queue List (Figma Node 40012554:19239)
+// Admin Verification Queue List
 const getAdminVerificationsListController = catchAsync(async (req, res) => {
   const result = await getAdminVerificationQueueService(req.query);
   return res.status(status.OK).json(
@@ -483,7 +483,7 @@ const getAdminVerificationsListController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Verification Details Drawer (Figma Node 40012554:20000)
+// Admin verification details
 const getAdminVerificationDetailsController = catchAsync(async (req, res) => {
   const result = await getAdminVerificationDetailsService(req.params.id);
   return res.status(status.OK).json(
@@ -497,7 +497,7 @@ const getAdminVerificationDetailsController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Approve Verification (Figma Node 40012554:20000)
+// Admin Approve Verification
 const adminApproveVerificationController = catchAsync(async (req, res) => {
   const result = await adminApproveVerificationService(req.params.id, req.body);
   return res.status(status.OK).json(
@@ -511,7 +511,7 @@ const adminApproveVerificationController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Reject Verification (Figma Node 40012554:20000)
+// Admin Reject Verification
 const adminRejectVerificationController = catchAsync(async (req, res) => {
   const result = await adminRejectVerificationService(req.params.id, req.body);
   return res.status(status.OK).json(

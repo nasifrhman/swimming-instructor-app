@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Embedded Public Pool sub-schema (Figma: Add pool modal)
+// Embedded Public Pool sub-schema 
 const publicPoolSchema = new mongoose.Schema(
   {
     poolName: {

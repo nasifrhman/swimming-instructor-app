@@ -34,7 +34,7 @@ async function resolveUserId(req) {
 }
 
 /**
- * 1. Get My Notifications (Figma Node 40012289:5166)
+ * 1. Get My Notifications
  * Supports pagination and groups into Today, Yesterday, and Earlier
  */
 const getMyNotificationsController = catchAsync(async (req, res) => {
@@ -114,7 +114,7 @@ const markNotificationAsReadController = catchAsync(async (req, res) => {
 });
 
 /**
- * 4. Mark All Notifications as Read (Figma "Mark as all read" button)
+ * Mark all notifications as read
  */
 const markAllNotificationsAsReadController = catchAsync(async (req, res) => {
   const userId = await resolveUserId(req);
@@ -191,7 +191,7 @@ const createNotificationController = catchAsync(async (req, res) => {
 });
 
 /**
- * 8. Seed Demo Notifications (Matches Figma Node 40012289:5166)
+ * 8. Seed Demo Notifications (Matches)
  */
 const seedDemoNotificationsController = catchAsync(async (req, res) => {
   const userId = await resolveUserId(req);

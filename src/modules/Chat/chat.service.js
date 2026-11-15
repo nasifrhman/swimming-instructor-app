@@ -162,7 +162,7 @@ const createOrGetChatService = async (userId, targetUserId, bookingId = null) =>
 };
 
 /**
- * Get My Conversations (Inbox List) - Figma Screen 1 (40012257:2626)
+ * Get My Conversations (Inbox List) -(40012257:2626)
  */
 const getMyConversationsService = async (userId, { search = '', page = 1, limit = 20 }) => {
   const pageNum = Number(page) || 1;
@@ -231,7 +231,7 @@ const getMyConversationsService = async (userId, { search = '', page = 1, limit 
 };
 
 /**
- * Get Message History for a Chat - Figma Screen 2 (40012262:7458)
+ * Get Message History for a Chat -(40012262:7458)
  */
 const getChatMessagesService = async (userId, chatId, query = {}) => {
   const {
@@ -571,7 +571,7 @@ const sendMessageService = async (userId, { chatId, receiverId, text = '', image
       message: populatedMessage
     });
 
-    // Create persistent notification for message receiver (Figma 40012289:5166)
+    // Create persistent notification for message receiver
     try {
       const { createNotificationService } = require('../Notification/notification.service');
       const snippet = previewText ? `"${previewText.length > 80 ? previewText.substring(0, 77) + '...' : previewText}"` : 'Sent an attachment';

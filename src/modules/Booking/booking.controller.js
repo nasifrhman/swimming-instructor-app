@@ -214,7 +214,7 @@ const sendBookingReminder = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Bookings List (Figma 40012554:17793)
+// Admin Bookings List
 const getAdminBookingsListController = catchAsync(async (req, res) => {
   const result = await getAdminBookingsListService(req.query);
   return res.status(status.OK).json(
@@ -228,7 +228,7 @@ const getAdminBookingsListController = catchAsync(async (req, res) => {
   );
 });
 
-// Admin Booking Details Drawer (Figma 40012554:18447)
+// Admin booking details
 const getAdminBookingDetailsController = catchAsync(async (req, res) => {
   const result = await getAdminBookingDetailsService(req.params.id);
   return res.status(status.OK).json(
@@ -256,7 +256,7 @@ const adminUpdateBookingStatusController = catchAsync(async (req, res) => {
   );
 });
 
-// Create Stripe PaymentIntent for Booking (Step 5: Review & Pay)
+// Create Stripe PaymentIntent for Booking (Review & Pay)
 const createBookingPaymentIntent = catchAsync(async (req, res) => {
   const result = await createBookingPaymentIntentService(req.User._id, req.body);
   return res.status(status.OK).json(
@@ -379,7 +379,7 @@ const checkBookingConflictController = catchAsync(async (req, res) => {
   );
 });
 
-// Get Review & Pay details for a booking (Figma Node 40012199:3518)
+// Get Review & Pay details for a booking
 const getBookingReviewDetails = catchAsync(async (req, res) => {
   const result = await getBookingReviewDetailsService(req.params.id, req.User?._id);
   return res.status(status.OK).json(
@@ -392,7 +392,7 @@ const getBookingReviewDetails = catchAsync(async (req, res) => {
   );
 });
 
-// Get Booking Confirmed details for a booking (Figma Node 40012199:3699)
+// Get Booking Confirmed details for a booking
 const getBookingConfirmationDetails = catchAsync(async (req, res) => {
   const result = await getBookingConfirmationDetailsService(req.params.id, req.User?._id);
   return res.status(status.OK).json(

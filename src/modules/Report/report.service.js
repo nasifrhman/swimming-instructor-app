@@ -26,7 +26,7 @@ const getInitials = (name) => {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
-// Avatar color palette matching Figma
+// Avatar color palette 
 const AVATAR_PALETTE = ['#64748B', '#0EA5E9', '#EF4444', '#10B981', '#8B5CF6', '#F59E0B', '#EC4899', '#14B8A6'];
 
 const getAvatarColor = (identifier, fallbackIndex = 0) => {
@@ -223,7 +223,7 @@ const createReportService = async (userId, userRole, data = {}, files = []) => {
 };
 
 /**
- * Admin Disputes List (Figma 40012554:20231)
+ * Admin Disputes List
  * Columns: Booking ID, Client, Instructor, Date, Status, Reason, Actions
  * Tabs: Open (count), Resolved (count), All (count)
  */
@@ -343,8 +343,8 @@ const getAdminDisputesListService = async (queryParams = {}) => {
 };
 
 /**
- * Admin Dispute Details Drawer (Figma 40012554:20832)
- * Slide-out drawer with Dispute: BK-XXXX, Badge, Client, Instructor,
+ * Admin dispute details
+ * Retrieve dispute details including booking and participants
  * Booking ID, Date, Amount, Flagged Reason, Details, Photo, Dismiss & Resolve actions.
  */
 const getAdminDisputeDetailsService = async (disputeId) => {

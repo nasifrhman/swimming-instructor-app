@@ -7,7 +7,7 @@ const Favourite = require('../Favourite/favourite.model');
 const ApiError = require('../../exceptions/ApiError');
 const { status: httpStatus } = require('http-status');
 
-// Helper to normalize public pool inputs (Figma: Add pool modal 40012599:4787)
+// Helper to normalize public pool inputs 
 const normalizePool = (pool) => {
   if (!pool || typeof pool !== 'object') return null;
   const poolName = (pool.poolName || pool.name || '').trim();
@@ -211,7 +211,7 @@ const createOrUpdateServiceAndPricing = async (instructorId, payload = {}, files
   return serviceAndPricing;
 };
 
-// Add a single public pool (Figma: Add pool modal 40012599:4787)
+// Add a single public pool 
 const addPublicPoolService = async (instructorId, poolData) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid instructor ID');
@@ -241,7 +241,7 @@ const addPublicPoolService = async (instructorId, poolData) => {
   return serviceAndPricing;
 };
 
-// Delete a public pool by ID (Figma: Cross icon 40012599:4589)
+// Delete a public pool by ID 
 const deletePublicPoolService = async (instructorId, poolId) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid instructor ID');
@@ -319,7 +319,7 @@ const getMyServiceAndPricing = async (instructorId) => {
 };
 
 /**
- * Get Instructor Service Details for User End (matching Figma Details / About page: 40012606:5436)
+ * Get Instructor Service Details for User End (
  * Lightweight and optimized for fast response.
  */
 const getInstructorServiceAndPricing = async (instructorId, currentUserId = null) => {

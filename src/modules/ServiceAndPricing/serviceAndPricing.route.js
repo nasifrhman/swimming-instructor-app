@@ -19,7 +19,7 @@ const {
   updatePublicPool
 } = require('./serviceAndPricing.controller');
 
-// Public Pool routes (Figma: Add pool modal 40012599:4787 & delete pool)
+// Public Pool routes 
 router.post(
   ['/pool', '/add-pool'],
   authOrOnboarding(['instructor', 'admin']),

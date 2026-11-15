@@ -8,7 +8,7 @@ const {
 } = require('./refund.service');
 
 /**
- * 1. Admin - Get Refunds Ledger (Figma Node 40012554:21158)
+ * 1. Admin - Get Refunds Ledger
  */
 const getAdminRefundsLedger = catchAsync(async (req, res) => {
   const result = await getAdminRefundsLedgerService(req.query);
@@ -40,7 +40,7 @@ const getAdminRefundDetails = catchAsync(async (req, res) => {
 });
 
 /**
- * 3. Admin - Issue Manual Refund (Figma Node 40012554:21158)
+ * 3. Admin - Issue Manual Refund
  */
 const issueAdminManualRefund = catchAsync(async (req, res) => {
   const result = await issueAdminManualRefundService(req.body, req.User?._id);

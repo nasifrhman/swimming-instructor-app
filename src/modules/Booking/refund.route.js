@@ -7,7 +7,7 @@ const {
   issueAdminManualRefund
 } = require('./refund.controller');
 
-// ==================== Admin Refund Endpoints (Figma Node 40012554:21158) ====================
+// 
 
 // 1. Get Refunds Ledger (Tabs: All, Dispute, Cancellation, Manual with counts)
 router.get('/admin', auth(['admin']), getAdminRefundsLedger);

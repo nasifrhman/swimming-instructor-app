@@ -51,10 +51,6 @@ const sendOTP = async (
     Date.now() + otpExpiryTime * 60 * 1000
   );
 
-  // ==========================================
-  // 1. SEND OTP FIRST
-  // ==========================================
-
   if (receiverType === "email") {
     const subject =
       purpose === "email-verification"
@@ -220,9 +216,9 @@ const sendOTP = async (
   // if (receiverType === "phone") {
   //   await sendWhatsAppOtp(sentTo, otp);
   // }
-  // ==========================================
+  // 
   // 2. ONLY SAVE OTP IF SENDING SUCCESSFUL
-  // ==========================================
+  // 
 
   await OTP.findOneAndUpdate(
     {

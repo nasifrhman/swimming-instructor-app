@@ -66,7 +66,7 @@ const getInstructorService = catchAsync(async (req, res) => {
   );
 });
 
-// Add a single public pool (Figma: Add pool modal 40012599:4787)
+// Add a single public pool 
 const addPublicPool = catchAsync(async (req, res) => {
   let poolData = req.body || {};
   if (poolData && poolData.data) {
@@ -92,7 +92,7 @@ const addPublicPool = catchAsync(async (req, res) => {
   );
 });
 
-// Delete a public pool (Figma: Cross icon 40012599:4589)
+// Delete a public pool 
 const deletePublicPool = catchAsync(async (req, res) => {
   const instructorId = req.User?._id || req.User?.id || req.dbUser?._id;
   const poolId = req.params.poolId || req.body?.poolId || req.query?.poolId;

@@ -7,7 +7,7 @@ const ApiError = require('../../exceptions/ApiError');
 const httpStatus = require('http-status');
 
 /**
- * Format relative timestamp matching Figma (e.g., "2 mins ago", "5h ago", "Yesterday, 2:40 PM", "Aug 3")
+ * Format relative timestamp 
  */
 function formatNotificationTime(date) {
   if (!date) return '';
@@ -102,8 +102,7 @@ function getTypeIconConfig(type) {
 }
 
 /**
- * Format notification document into clean frontend payload matching Figma Node 40012289:5166
- * Eliminates all unnecessary fields (sender, recipient, readAt, updatedAt, relativeTime)
+ * Format notification document into clean frontend payload matching* Eliminates all unnecessary fields (sender, recipient, readAt, updatedAt, relativeTime)
  */
 function formatNotificationItem(doc) {
   const plain = doc.toObject ? doc.toObject() : doc;
@@ -245,7 +244,7 @@ const createNotificationService = async (payload) => {
 };
 
 /**
- * 2. Get Notifications for the Authenticated User (with Figma Date Grouping & Pagination)
+ * Get notifications for authenticated user with date grouping and pagination
  */
 const getMyNotificationsService = async (userId, query = {}) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -264,7 +263,7 @@ const getMyNotificationsService = async (userId, query = {}) => {
   }
 
   // If user has zero notifications and autoSeed is requested (or query.seedDemo === 'true'),
-  // seed the 7 exact notifications from Figma Node 40012289:5166 for demo preview!
+  // seed the 7 exact notifications fromfor demo preview!
   const totalCount = await Notification.countDocuments(filter);
   if (totalCount === 0 && (query.seedDemo === 'true' || query.seedDemo === true)) {
     await seedSampleNotificationsForUser(userId);
@@ -280,7 +279,7 @@ const getMyNotificationsService = async (userId, query = {}) => {
 
   const formattedItems = docs.map(formatNotificationItem);
 
-  // Group by 'Today', 'Yesterday', 'Earlier' matching Figma Node 40012289:5166
+  // Group by 'Today', 'Yesterday', 'Earlier'
   const grouped = {
     today: [],
     yesterday: [],
@@ -383,7 +382,7 @@ const markNotificationAsReadService = async (userId, notificationId) => {
 };
 
 /**
- * 5. Mark All Notifications as Read ("Mark as all read" button in Figma 40012289:5166)
+ * 5. Mark All Notifications as Read ("Mark as all read" button in)
  */
 const markAllNotificationsAsReadService = async (userId) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -502,7 +501,7 @@ const clearAllNotificationsService = async (userId) => {
 };
 
 /**
- * 8. Seed Exact Figma 40012289:5166 Demo Notifications for a User
+ * 8. Seed ExactDemo Notifications for a User
  */
 const seedSampleNotificationsForUser = async (userId) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) return;

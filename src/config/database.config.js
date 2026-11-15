@@ -4,7 +4,7 @@ const databaseConfig = {
   uri: envConfig.mongoUri,
   options: {
     autoIndex: true,
-    serverSelectionTimeoutMS: 45000, // 45 seconds to accommodate cloud network latency & replica set elections
+    serverSelectionTimeoutMS: 45000,
     connectTimeoutMS: 30000,
     socketTimeoutMS: 45000,
   }

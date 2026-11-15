@@ -16,9 +16,7 @@ const {
   deleteBankAccountService
 } = require('./earnings.service');
 
-/**
- * 1. Get Instructor Earnings Overview Screen Data (Figma Node 40012419:6929)
- */
+// Get instructor earnings overview
 const getInstructorEarningsOverview = catchAsync(async (req, res) => {
   const instructorId = req.query.instructorId || req.User._id;
   const { month, year } = req.query;
@@ -34,9 +32,7 @@ const getInstructorEarningsOverview = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 2. Get Instructor Transactions History Screen Data (Figma Node 40012438:8506)
- */
+// Get instructor transaction history
 const getInstructorTransactionsHistory = catchAsync(async (req, res) => {
   const instructorId = req.query.instructorId || req.User._id;
   const result = await getInstructorTransactionsHistoryService(instructorId, req.query);
@@ -51,9 +47,7 @@ const getInstructorTransactionsHistory = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 3. Request Withdrawal
- */
+// Submit withdrawal request
 const requestWithdrawal = catchAsync(async (req, res) => {
   const instructorId = req.User._id;
   const result = await requestWithdrawalService(instructorId, req.body);
@@ -68,9 +62,7 @@ const requestWithdrawal = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 4. Admin - Get Pending Withdrawals (Figma Node 40012563:21572)
- */
+// Get pending withdrawal requests
 const getAdminPendingWithdrawals = catchAsync(async (req, res) => {
   const result = await getAdminPendingWithdrawalsService(req.query);
 
@@ -84,9 +76,7 @@ const getAdminPendingWithdrawals = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 5. Admin - Get Withdrawal History (Figma Node 40012563:22328)
- */
+// Get withdrawal history
 const getAdminWithdrawalHistory = catchAsync(async (req, res) => {
   const result = await getAdminWithdrawalHistoryService(req.query);
 
@@ -100,9 +90,7 @@ const getAdminWithdrawalHistory = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 6. Admin - Get Withdrawal Details by ID
- */
+// Get withdrawal details by ID
 const getAdminWithdrawalDetails = catchAsync(async (req, res) => {
   const result = await getAdminWithdrawalDetailsService(req.params.id);
 
@@ -116,9 +104,7 @@ const getAdminWithdrawalDetails = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 7. Admin - Action Withdrawal (Approve / Reject)
- */
+// Approve or reject withdrawal request
 const adminActionWithdrawal = catchAsync(async (req, res) => {
   const { id } = req.params;
   const action = req.params.action || req.body.action || (req.path.includes('approve') ? 'approve' : 'reject');
@@ -134,9 +120,7 @@ const adminActionWithdrawal = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 8. Admin - Get Platform Earnings Overview & Chart (Figma Node 40012563:22986)
- */
+// Get platform earnings metrics
 const getAdminPlatformEarningsOverview = catchAsync(async (req, res) => {
   const result = await getAdminPlatformEarningsOverviewService(req.query.year);
 
@@ -150,9 +134,7 @@ const getAdminPlatformEarningsOverview = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 9. Admin - Get Platform Transaction Breakdown (Figma Node 40012563:22986)
- */
+// Get platform transactions list
 const getAdminPlatformTransactions = catchAsync(async (req, res) => {
   const result = await getAdminPlatformTransactionsService(req.query);
 
@@ -166,9 +148,7 @@ const getAdminPlatformTransactions = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 10. Get Bank Account Details (Figma Node 40012508:6741)
- */
+// Get bank account details
 const getBankAccount = catchAsync(async (req, res) => {
   const targetUserId = req.query.userId || req.query.instructorId || req.User?._id || req.user?._id;
   const result = await getBankAccountService(targetUserId);
@@ -183,9 +163,7 @@ const getBankAccount = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 11. Save / Update Bank Account Details (Figma Node 40012508:6741)
- */
+// Save or update bank account details
 const saveBankAccount = catchAsync(async (req, res) => {
   const userId = req.User?._id || req.user?._id;
   const result = await saveBankAccountService(userId, req.body);
@@ -200,9 +178,7 @@ const saveBankAccount = catchAsync(async (req, res) => {
   );
 });
 
-/**
- * 12. Delete / Reset Bank Account Details (Figma Node 40012508:6741)
- */
+// Delete saved bank account
 const deleteBankAccount = catchAsync(async (req, res) => {
   const userId = req.User?._id || req.user?._id;
   const result = await deleteBankAccountService(userId);

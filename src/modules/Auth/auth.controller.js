@@ -117,7 +117,7 @@ const localAuth = catchAsync(async (req, res) => {
   }));
 });
 
-// Sign up (Step 1 & 2: Role selection + email credentials)
+// Sign up (Role selection + email credentials)
 const signUp = catchAsync(async (req, res) => {
   const { email, password, confirmPassword, role = 'user' } = req.body;
   const fullName = req.body.fullName || req.body.name || '';
@@ -182,7 +182,7 @@ const signUp = catchAsync(async (req, res) => {
   );
 });
 
-// Validate OTP (Step 3: Verification)
+// Validate OTP (Verification)
 const otpVerification = catchAsync(async (req, res) => {
   const email = req.User?.email || req.body.email;
   const purpose = req.body.purpose || req.User?.purpose || "email-verification";
@@ -298,7 +298,7 @@ const resendOTP = catchAsync(async (req, res) => {
   );
 });
 
-// Forget Password (Screen 1: Enter email)
+// Forget Password (Enter email)
 const forgetPassword = catchAsync(async (req, res) => {
   const { email } = req.body;
 
@@ -339,7 +339,7 @@ const forgetPassword = catchAsync(async (req, res) => {
   );
 });
 
-// Reset Password (Screen 3: Create New Password)
+// Reset Password (Create New Password)
 const resetPassword = catchAsync(async (req, res) => {
   const newPassword = req.body.password || req.body.newPassword;
   const confirmPassword = req.body.confirmPassword;
@@ -389,7 +389,7 @@ const changePassword = catchAsync(async (req, res) => {
   );
 });
 
-// Update Profile (Step 4 & Figma Edit Profile 40012257:5335: Full Name, DOB, Avatar, Email, etc.)
+// Update profile details (full name, DOB, avatar, email, etc.)
 const updateProfile = catchAsync(async (req, res) => {
   // Normalize field aliases
   if (req.body.name && !req.body.fullName) {
@@ -420,7 +420,7 @@ const updateProfile = catchAsync(async (req, res) => {
 
   const isExistingUser = req.dbUser || (req.User?._id && (await getUserById(req.User._id)));
 
-  // Case A: Existing user in MongoDB updating their profile (Figma 40012257:5335)
+  // Existing user profile update
   if (isExistingUser) {
     const user = isExistingUser;
 
@@ -481,14 +481,14 @@ const updateProfile = catchAsync(async (req, res) => {
     );
   }
 
-  // Case B: Onboarding user (not in DB yet)
+  // New user onboarding profile setup
   if (!req.User || !req.User.isOtpVerified) {
     throw new ApiError(status.UNAUTHORIZED, "Please verify OTP before setting up your profile");
   }
 
   const role = req.body.role || req.User.role || 'user';
 
-  // For Client / User: Profile setup is the FINAL onboarding step -> CREATE ACCOUNT IN DB
+  // Client registration: create user record and issue token
   if (role === 'user') {
     const createdUser = await createUserOnProfileSetupService(req.User, req.body, req.file);
     const accessToken = await tokenGenerator(createdUser);
@@ -511,7 +511,7 @@ const updateProfile = catchAsync(async (req, res) => {
     );
   }
 
-  // For Instructor: Profile setup is an intermediate step -> SAVE ONBOARDING STATE, WAIT FOR DOCUMENTS
+  // Instructor onboarding: save profile state for document verification step
   if (role === 'instructor') {
     let profileImage = '/uploads/users/user.jpg';
     if (req.file && req.file.filename) {
@@ -635,7 +635,7 @@ const myDocumentsController = catchAsync(async (req, res) => {
   );
 });
 
-// Get My Profile (Powers Figma Edit Profile 40012257:5335)
+// Get My Profile 
 const userDetailsByID = catchAsync(async (req, res) => {
   const user = await profileByIdService(req.User._id);
 
