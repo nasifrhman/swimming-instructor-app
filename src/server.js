@@ -2,6 +2,7 @@ const app = require("./app");
 const envConfig = require("./config/env.config");
 const logger = require("./utils/logger");
 const { connectDatabase, disconnectDatabase } = require("./infrastructure/database/mongoose");
+const cacheService = require("./infrastructure/cache/cache.service");
 const { seedAdmin } = require("./seeder/seed");
 const { initCronJobs } = require("./jobs/bookingSync.cron");
 
@@ -89,6 +90,7 @@ async function graceful(err) {
 
   try {
     await disconnectDatabase();
+    await cacheService.disconnect();
   } catch (dbErr) {
     // Continue exit
   }

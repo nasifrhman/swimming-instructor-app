@@ -3,6 +3,7 @@ const userModel = require("./user.model");
 const userRepository = require("./user.repository");
 const ApiError = require("../../exceptions/ApiError");
 const { status: httpStatus } = require("http-status");
+const cacheService = require("../../infrastructure/cache/cache.service");
 
 const suspendUserService = async (id, reason) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -1751,12 +1752,15 @@ const updateInstructorStatusService = async (instructorId, payload = {}) => {
  * - Top 5 Pending Instructors awaiting verification
  */
 const getAdminDashboardOverviewService = async (queryParams = {}) => {
-  const Booking = require('../Booking/booking.model');
-  const Report = require('../Report/report.model');
-  const Transaction = require('../Earnings/transaction.model');
+  const targetYear = queryParams.year ? parseInt(queryParams.year, 10) : new Date().getFullYear();
+  const cacheKey = `admin:dashboard:overview:${targetYear}`;
 
-  const now = new Date();
-  const targetYear = queryParams.year ? parseInt(queryParams.year, 10) : now.getFullYear();
+  return await cacheService.getOrSet(cacheKey, async () => {
+    const Booking = require('../Booking/booking.model');
+    const Report = require('../Report/report.model');
+    const Transaction = require('../Earnings/transaction.model');
+
+    const now = new Date();
 
   // Date ranges
   const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -2043,12 +2047,13 @@ const getAdminDashboardOverviewService = async (queryParams = {}) => {
     }
   }));
 
-  return {
-    kpis,
-    bookingsOverviewChart,
-    earningsOverviewChart,
-    pendingInstructors
-  };
+    return {
+      kpis,
+      bookingsOverviewChart,
+      earningsOverviewChart,
+      pendingInstructors
+    };
+  }, 60); // Cache dashboard aggregation metrics for 60 seconds
 };
 
 // Helpers for Admin Verification Services

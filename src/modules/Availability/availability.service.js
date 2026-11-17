@@ -2,6 +2,7 @@ const Availability = require('./availability.model');
 const availabilityRepository = require('./availability.repository');
 const ApiError = require('../../exceptions/ApiError');
 const { status: httpStatus } = require('http-status');
+const cacheService = require('../../infrastructure/cache/cache.service');
 const {
   timeStringToMinutes,
   resolveEndTime,
@@ -22,14 +23,16 @@ const defaultWeeklySchedule = [
 ];
 
 const getAvailabilityByInstructorId = async (instructorId) => {
-  let availability = await Availability.findOne({ instructor: instructorId });
-  if (!availability) {
-    availability = await Availability.create({
-      instructor: instructorId,
-      weeklySchedule: defaultWeeklySchedule
-    });
-  }
-  return availability;
+  return await cacheService.getOrSet(`availability:weekly:${instructorId}`, async () => {
+    let availability = await Availability.findOne({ instructor: instructorId });
+    if (!availability) {
+      availability = await Availability.create({
+        instructor: instructorId,
+        weeklySchedule: defaultWeeklySchedule
+      });
+    }
+    return availability;
+  }, 600);
 };
 
 const updateAvailabilityService = async (instructorId, payload) => {
@@ -52,6 +55,7 @@ const updateAvailabilityService = async (instructorId, payload) => {
     if (payload.weeklySchedule) availability.weeklySchedule = payload.weeklySchedule;
   }
   await availability.save();
+  await cacheService.delByPattern(`availability:*:${instructorId}*`);
   return availability;
 };
 
@@ -84,6 +88,7 @@ const addSlotService = async (instructorId, day, slotData) => {
   daySchedule.slots.push(slotData);
   daySchedule.isAvailable = true;
   await availability.save();
+  await cacheService.delByPattern(`availability:*:${instructorId}*`);
   return availability;
 };
 
@@ -102,6 +107,7 @@ const removeSlotService = async (instructorId, day, slotId) => {
   );
 
   await availability.save();
+  await cacheService.delByPattern(`availability:*:${instructorId}*`);
   return availability;
 };
 
@@ -117,6 +123,7 @@ const toggleDayService = async (instructorId, day, isAvailable) => {
 
   daySchedule.isAvailable = isAvailable;
   await availability.save();
+  await cacheService.delByPattern(`availability:*:${instructorId}*`);
   return availability;
 };
 

@@ -1,5 +1,6 @@
 const PlatformSetting = require('./platformSetting.model');
 const platformSettingRepository = require('./platformSetting.repository');
+const cacheService = require('../../infrastructure/cache/cache.service');
 
 const formatDate = (date) => {
   if (!date) return 'N/A';
@@ -94,26 +95,27 @@ const getOrCreateSettingsDoc = async () => {
 };
 
 /**
- * 1. API 1: Get current fees & commission configuration
- * Fee configuration settings*/
+ * 1. Get current fees & commission configuration
+ */
 const getFeeSettingsService = async () => {
-  const doc = await getOrCreateSettingsDoc();
+  return await cacheService.getOrSet('settings:fees', async () => {
+    const doc = await getOrCreateSettingsDoc();
 
-  return {
-    platformFee: {
-      percentage: doc.platformFee.percentage,
-      lastChanged: formatDate(doc.platformFee.lastChanged)
-    },
-    instructorCommission: {
-      percentage: doc.instructorCommission.percentage,
-      lastChanged: formatDate(doc.instructorCommission.lastChanged)
-    }
-  };
+    return {
+      platformFee: {
+        percentage: doc.platformFee.percentage,
+        lastChanged: formatDate(doc.platformFee.lastChanged)
+      },
+      instructorCommission: {
+        percentage: doc.instructorCommission.percentage,
+        lastChanged: formatDate(doc.instructorCommission.lastChanged)
+      }
+    };
+  }, 3600);
 };
 
 /**
  * 2. Update Platform Fee
- * Matching(Platform Fee "Save fee")
  */
 const updatePlatformFeeService = async (payload, adminUser = {}) => {
   const { percentage } = payload;
@@ -141,6 +143,7 @@ const updatePlatformFeeService = async (payload, adminUser = {}) => {
   });
 
   await doc.save();
+  await cacheService.delByPattern('settings:*');
 
   return {
     platformFee: {
@@ -152,7 +155,6 @@ const updatePlatformFeeService = async (payload, adminUser = {}) => {
 
 /**
  * 3. Update Instructor Commission
- * Matching(Instructor Commission "Save commission")
  */
 const updateInstructorCommissionService = async (payload, adminUser = {}) => {
   const { percentage } = payload;
@@ -180,6 +182,7 @@ const updateInstructorCommissionService = async (payload, adminUser = {}) => {
   });
 
   await doc.save();
+  await cacheService.delByPattern('settings:*');
 
   return {
     instructorCommission: {
@@ -191,32 +194,35 @@ const updateInstructorCommissionService = async (payload, adminUser = {}) => {
 
 /**
  * 4. Get audit history for fees or commission
- * Matching(HistoryModal)
  */
 const getFeeHistoryService = async (type) => {
-  const doc = await getOrCreateSettingsDoc();
-  const list = doc.history || [];
+  const cacheKey = `settings:history:${type || 'all'}`;
 
-  const formatList = (items) =>
-    items
-      .filter((h) => h.previousPercentage !== h.newPercentage)
-      .sort((a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime())
-      .map((item) => ({
-        _id: item._id,
-        previousPercentage: item.previousPercentage,
-        newPercentage: item.newPercentage,
-        changedBy: item.changedBy || 'Samantha Archer',
-        date: formatDate(item.changedAt)
-      }));
+  return await cacheService.getOrSet(cacheKey, async () => {
+    const doc = await getOrCreateSettingsDoc();
+    const list = doc.history || [];
 
-  if (type === 'platform_fee' || type === 'instructor_commission') {
-    return formatList(list.filter((h) => h.type === type));
-  }
+    const formatList = (items) =>
+      items
+        .filter((h) => h.previousPercentage !== h.newPercentage)
+        .sort((a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime())
+        .map((item) => ({
+          _id: item._id,
+          previousPercentage: item.previousPercentage,
+          newPercentage: item.newPercentage,
+          changedBy: item.changedBy || 'Samantha Archer',
+          date: formatDate(item.changedAt)
+        }));
 
-  return {
-    platformFee: formatList(list.filter((h) => h.type === 'platform_fee')),
-    instructorCommission: formatList(list.filter((h) => h.type === 'instructor_commission'))
-  };
+    if (type === 'platform_fee' || type === 'instructor_commission') {
+      return formatList(list.filter((h) => h.type === type));
+    }
+
+    return {
+      platformFee: formatList(list.filter((h) => h.type === 'platform_fee')),
+      instructorCommission: formatList(list.filter((h) => h.type === 'instructor_commission'))
+    };
+  }, 1800);
 };
 
 module.exports = {

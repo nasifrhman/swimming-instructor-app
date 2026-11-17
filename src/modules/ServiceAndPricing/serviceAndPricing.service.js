@@ -6,6 +6,7 @@ const userRepository = require('../User/user.repository');
 const Favourite = require('../Favourite/favourite.model');
 const ApiError = require('../../exceptions/ApiError');
 const { status: httpStatus } = require('http-status');
+const cacheService = require('../../infrastructure/cache/cache.service');
 
 // Helper to normalize public pool inputs 
 const normalizePool = (pool) => {
@@ -208,6 +209,7 @@ const createOrUpdateServiceAndPricing = async (instructorId, payload = {}, files
   }
 
   await serviceAndPricing.save();
+  await cacheService.delByPattern(`services:*:${instructorId}*`);
   return serviceAndPricing;
 };
 
@@ -238,6 +240,7 @@ const addPublicPoolService = async (instructorId, poolData) => {
   serviceAndPricing.publicPools.pools.push(normalized);
 
   await serviceAndPricing.save();
+  await cacheService.delByPattern(`services:*:${instructorId}*`);
   return serviceAndPricing;
 };
 
@@ -270,6 +273,7 @@ const deletePublicPoolService = async (instructorId, poolId) => {
   }
 
   await serviceAndPricing.save();
+  await cacheService.delByPattern(`services:*:${instructorId}*`);
   return serviceAndPricing;
 };
 
@@ -310,17 +314,19 @@ const updatePublicPoolService = async (instructorId, poolId, poolData) => {
   }
 
   await serviceAndPricing.save();
+  await cacheService.delByPattern(`services:*:${instructorId}*`);
   return serviceAndPricing;
 };
 
 const getMyServiceAndPricing = async (instructorId) => {
-  const serviceAndPricing = await ServiceAndPricing.findOne({ instructor: instructorId });
-  return serviceAndPricing;
+  return await cacheService.getOrSet(`services:my:${instructorId}`, async () => {
+    return await ServiceAndPricing.findOne({ instructor: instructorId });
+  }, 900);
 };
 
 /**
- * Get Instructor Service Details for User End (
- * Lightweight and optimized for fast response.
+ * Get Instructor Service Details for User End
+ * Cached with instructor details while checking user-specific favourite status dynamically.
  */
 const getInstructorServiceAndPricing = async (instructorId, currentUserId = null) => {
   if (!mongoose.Types.ObjectId.isValid(instructorId)) {
@@ -329,25 +335,56 @@ const getInstructorServiceAndPricing = async (instructorId, currentUserId = null
 
   const instructorObjectId = new mongoose.Types.ObjectId(String(instructorId));
 
-  // 1. Fetch Instructor Profile
-  const instructor = await User.findById(instructorObjectId).select(
-    'fullName email number countryCode image role avgRating totalReviews ratingCount bio about address experience certifications certification isVerified lessonsTaught teaches speaks'
-  );
+  // 1. Fetch cached Instructor Profile & Service Info
+  const baseData = await cacheService.getOrSet(`services:instructor:${instructorId}`, async () => {
+    const instructor = await User.findById(instructorObjectId).select(
+      'fullName email number countryCode image role avgRating totalReviews ratingCount bio about address experience certifications certification isVerified lessonsTaught teaches speaks'
+    );
 
-  if (!instructor || instructor.role !== 'instructor') {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Instructor not found');
-  }
+    if (!instructor || instructor.role !== 'instructor') {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Instructor not found');
+    }
 
-  // 2. Fetch Service & Pricing
-  const serviceAndPricing = await ServiceAndPricing.findOne({ instructor: instructorObjectId });
+    const serviceAndPricing = await ServiceAndPricing.findOne({ instructor: instructorObjectId });
 
-  // 3. Check favourite status for the user
+    const experienceYears = (instructor.experience?.years !== undefined && instructor.experience?.years !== null)
+      ? Number(instructor.experience.years)
+      : 0;
+
+    const certifications = instructor.certifications || instructor.certification?.name || '';
+    const isVerified = Boolean(instructor.isVerified);
+    const badgeText = isVerified ? 'Checked by SwimLetes' : '';
+    const avgRating = typeof instructor.avgRating === 'number' ? instructor.avgRating : (Number(instructor.avgRating) || 0);
+    const totalReviews = typeof instructor.totalReviews === 'number' ? instructor.totalReviews : (Number(instructor.totalReviews) || 0);
+    const lessonsTaught = typeof instructor.lessonsTaught === 'number' ? instructor.lessonsTaught : (Number(instructor.lessonsTaught) || 0);
+
+    return {
+      instructor: {
+        _id: instructor._id,
+        fullName: instructor.fullName || '',
+        email: instructor.email || '',
+        image: instructor.image || '',
+        address: instructor.address || serviceAndPricing?.ownPool?.address || '',
+        bio: instructor.bio || instructor.about || '',
+        experienceYears,
+        certifications,
+        isVerified,
+        badgeText,
+        avgRating,
+        totalReviews,
+        lessonsTaught
+      },
+      serviceAndPricing: serviceAndPricing || null
+    };
+  }, 900);
+
+  // 2. Dynamically check favourite status for the requesting user
   let isFavourite = false;
   if (currentUserId && mongoose.Types.ObjectId.isValid(currentUserId)) {
     const userObjectId = new mongoose.Types.ObjectId(String(currentUserId));
     const targetIds = [instructorObjectId];
-    if (serviceAndPricing?._id && mongoose.Types.ObjectId.isValid(serviceAndPricing._id)) {
-      targetIds.push(new mongoose.Types.ObjectId(String(serviceAndPricing._id)));
+    if (baseData.serviceAndPricing?._id && mongoose.Types.ObjectId.isValid(baseData.serviceAndPricing._id)) {
+      targetIds.push(new mongoose.Types.ObjectId(String(baseData.serviceAndPricing._id)));
     }
     const favDoc = await Favourite.findOne({
       user: userObjectId,
@@ -359,36 +396,13 @@ const getInstructorServiceAndPricing = async (instructorId, currentUserId = null
     isFavourite = !!favDoc;
   }
 
-  const experienceYears = (instructor.experience?.years !== undefined && instructor.experience?.years !== null)
-    ? Number(instructor.experience.years)
-    : 0;
-
-  const certifications = instructor.certifications || instructor.certification?.name || '';
-  const isVerified = Boolean(instructor.isVerified);
-  const badgeText = isVerified ? 'Checked by SwimLetes' : '';
-  const avgRating = typeof instructor.avgRating === 'number' ? instructor.avgRating : (Number(instructor.avgRating) || 0);
-  const totalReviews = typeof instructor.totalReviews === 'number' ? instructor.totalReviews : (Number(instructor.totalReviews) || 0);
-  const lessonsTaught = typeof instructor.lessonsTaught === 'number' ? instructor.lessonsTaught : (Number(instructor.lessonsTaught) || 0);
-
   return {
     isFavourite,
     instructor: {
-      _id: instructor._id,
-      fullName: instructor.fullName || '',
-      email: instructor.email || '',
-      image: instructor.image || '',
-      address: instructor.address || serviceAndPricing?.ownPool?.address || '',
-      bio: instructor.bio || instructor.about || '',
-      experienceYears,
-      certifications,
-      isVerified,
-      badgeText,
-      avgRating,
-      totalReviews,
-      lessonsTaught,
+      ...baseData.instructor,
       isFavourite
     },
-    serviceAndPricing: serviceAndPricing || null
+    serviceAndPricing: baseData.serviceAndPricing
   };
 };
 

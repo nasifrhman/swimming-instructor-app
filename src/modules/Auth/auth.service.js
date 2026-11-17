@@ -6,6 +6,7 @@ const authRepository = require('./auth.repository');
 const bcrypt = require('bcryptjs');
 const { default: status } = require('http-status');
 const { tokenGenerator } = require('../../utils/token.util');
+const cacheService = require('../../infrastructure/cache/cache.service');
 const { verifyAppleToken } = require('../../infrastructure/oauth/appleAuth.service');
 const { verifyGoogleToken } = require('../../infrastructure/oauth/googleAuth.service');
 
@@ -342,6 +343,8 @@ const updateUserById = async (id, data) => {
   };
 
   const user = await userModel.findByIdAndUpdate(id, userPayload, { new: true });
+  await cacheService.del(`user:profile:${id}`);
+  await cacheService.delByPattern(`services:*:${id}*`);
   return user;
 };
 
@@ -726,8 +729,9 @@ const myDocumentsService = async (userId) => {
 };
 
 const profileByIdService = async (userId) => {
-  const user = await userModel.findById(userId);
-  return user;
+  return await cacheService.getOrSet(`user:profile:${userId}`, async () => {
+    return await userModel.findById(userId);
+  }, 600);
 };
 
 const allUserService = async (options) => {
